@@ -9,4 +9,4 @@
     ansible-playbook playbooks/setup_docker.yml
     ```
 - SSH vào server r test.
-- Nhảy sang [DockerSetup.md](./DockerSetup.md).
+- Nhảy sang [PortainerSetup.md](./PortainerSetup.md).
