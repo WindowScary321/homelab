@@ -24,11 +24,16 @@
     ```
     ssh-copy-id username@192.168.100.186
     ```
-- Test cài.
+- Test cái.
     ```
     ssh username@192.168.100.186
     # Không phải nhập pass là ok
     ```
+- **Extra**: tắt nhập mật khẩu khi nhập ``sudo``:
+    - Sửa file ``/etc/sudoers``
+    - Thêm: ``username ALL=(ALL) NOPASSWD: ALL``
+    - Đỡ phải gõ lại mật khẩu khi chạy playbooks.
+    - Kết nối vào ssh vẫn yêu cầu mk hoặc ssh key.
 
 ## 2. Cài đặt pip và ansible
 - Cài pip, nếu cần python thì cài thêm.
@@ -40,7 +45,9 @@
     ```
     pipx ensurepath
     ```
+- Logout sau đó connect lại vào server.
 - Cài ansible:
     ```
     pipx install --include-deps ansible
     ```
+- Nhảy sang file [DockerSetup.md](./DockerSetup.md)
