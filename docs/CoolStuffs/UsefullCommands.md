@@ -1,7 +1,7 @@
 # Một số câu lệnh hữu ích khi sử dụng Ansible.
 
 ## 1. `ansible-playbook`
-- ``--Check`` cái, các thay đổi sẽ ko dc apply trên server.
+- ``--check`` cái, các thay đổi sẽ ko dc apply trên server.
     ```
     ansible-playbook playbooks/deploy_portainer.yml --check 
     ```
