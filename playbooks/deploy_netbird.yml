@@ -19,6 +19,11 @@
         owner: prouser
         group: prouser
 
+    - name: 2. Download portainer image
+      community.docker.docker_image:
+        name: netbirdio/netbird:latest
+        source: pull
+
     - name: 2. Start Netbird Container
       community.docker.docker_container:
         name: netbird-client
