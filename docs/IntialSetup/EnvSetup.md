@@ -50,4 +50,8 @@
     ```
     pipx install --include-deps ansible
     ```
+- Test cái:
+    ```
+    ansible all -m ping
+    ```
 - Nhảy sang file [DockerSetup.md](./DockerSetup.md)
