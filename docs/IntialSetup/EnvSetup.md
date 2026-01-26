@@ -24,6 +24,12 @@
     ```
     ssh-copy-id username@192.168.100.186
     ```
+- Test cài.
+    ```
+    ssh username@192.168.100.186
+    # Không phải nhập pass là ok
+    ```
+
 ## 2. Cài đặt pip và ansible
 - Cài pip, nếu cần python thì cài thêm.
     ```
