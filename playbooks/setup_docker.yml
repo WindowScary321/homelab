@@ -1,6 +1,6 @@
 ---
 
-- name: Cai dat Docker tren Debian Homelab
+- name: Docker install in homelab
   hosts: homelab
   become: true  # Chạy với quyền root
 
@@ -40,8 +40,7 @@
         repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable"
         state: present
         filename: docker
-      # Lưu ý: Vì Debian 13 (Trixie) mới quá, ta dùng repo của bản 12 (Bookworm) chạy vẫn ngon lành.
-
+        
     - name: 6. Install docker
       apt:
         name:
