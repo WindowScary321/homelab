@@ -1,0 +1,66 @@
+---
+
+- name: Cai dat Docker tren Debian Homelab
+  hosts: homelab
+  become: true  # Chạy với quyền root
+
+  tasks:
+    - name: 1. Update with apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: 2. Install depedency and extra stuffs
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - tmux
+          - rclone
+          - fastfetch
+          - htop
+        state: present
+
+    - name: 3. Create keyrings folder
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: 4. download gpg from docker
+      get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+        force: true
+
+    - name: 5. add repo to apt
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable"
+        state: present
+        filename: docker
+      # Lưu ý: Vì Debian 13 (Trixie) mới quá, ta dùng repo của bản 12 (Bookworm) chạy vẫn ngon lành.
+
+    - name: 6. Install docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: 7. Khoi dong Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: 8. add myself to docker grop
+      user:
+        name: prouser
+        groups: docker
+        append: yes
