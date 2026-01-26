@@ -1,0 +1,57 @@
+---
+- name: Trien khai WireGuard Server (Firewall Bypass - Port 123)
+  hosts: homelab
+  become: true
+
+  vars:
+    container_state: started
+    base_dir: "/home/prouser/docker-data"
+    puid: "1000"
+    pgid: "1000"
+    timezone: "Asia/Ho_Chi_Minh"
+    wireguard_port: "123" # né firewall của trường
+    server_url: "auto" 
+
+  tasks:
+    # 1. Tao thu muc config
+    - name: Tao thu muc config WireGuard
+      file:
+        path: "{{ base_dir }}/wireguard"
+        state: directory
+        mode: '0700'
+        owner: prouser
+        group: prouser
+
+    - name: Download WireGuard image
+      community.docker.docker_image:
+        name: lscr.io/linuxserver/wireguard:latest
+        source: pull
+
+    # 2. Khoi chay WireGuard Container
+    - name: Khoi chay WireGuard
+      community.docker.docker_container:
+        name: wireguard
+        image: lscr.io/linuxserver/wireguard:latest
+        state: "{{ container_state }}"
+        restart_policy: unless-stopped
+        capabilities:
+          - NET_ADMIN
+          - SYS_MODULE
+        sysctls:
+          net.ipv4.conf.all.src_valid_mark: "1"
+        env:
+          PUID: "{{ puid }}"
+          PGID: "{{ pgid }}"
+          TZ: "{{ timezone }}"
+          SERVERURL: "{{ server_url }}"
+          SERVERPORT: "{{ wireguard_port }}" 
+          PEERS: "phone,laptop"
+          PEERDNS: "auto"
+          INTERNAL_SUBNET: "10.13.13.0"
+          ALLOWEDIPS: "0.0.0.0/0"
+          LOG_CONFS: "true"
+        ports:
+          - "{{ wireguard_port }}:{{ wireguard_port }}/udp"
+        volumes:
+          - "{{ base_dir }}/wireguard:/config"
+          - "/lib/modules:/lib/modules"
