@@ -2,6 +2,7 @@
 *.retry
 *.pyc
 .ansible/
+.ansible_vault_pass
 
 # Ssh key stuffs
 *.pem
