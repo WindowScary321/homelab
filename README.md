@@ -5,6 +5,6 @@
 
 ## 1. Setup môi trường
 - Setup cơ bản tại [đây](./docs/EnvSetup.md).
-- Cài dockẻ và mấy package [linh tinh]().
+- Cài dockẻ và mấy package [linh tinh](./docs/IntialSetup/DockerSetup.md).
 
 ## 2. T bị lười 💀
