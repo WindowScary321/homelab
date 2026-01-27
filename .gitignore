@@ -10,3 +10,5 @@
 id_rsa
 id_ed25519
 
+# Dokcer stuffs
+docker-data/

@@ -1,0 +1,178 @@
+---
+- name: Deploy Traefik reverse proxy
+  hosts: homelab
+  become: true
+  
+  vars_files:
+    - ../../vars/secrets.yml
+  
+  vars:
+    base_dir: "/home/prouser/docker-data"  
+    container_state: started  
+    domain: "netbird.local"  # domain nội bộ cho các services
+    enable_dashboard_auth: true  # bật authentication cho Traefik dashboard
+  
+  tasks:    
+    - name: Install apache2-utils for htpasswd
+      apt:
+        name: apache2-utils  # package để tạo htpasswd hash
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    # TẠO HTPASSWD HASH CHO AUTHENTICATION
+    - name: Generate htpasswd hash for dashboard
+      shell: |
+        # Tạo hash từ username và password trong vault
+        # sed để escape $ thành $$ cho Docker labels
+        htpasswd -nb {{ traefik_dashboard_user }} {{ traefik_dashboard_password }} | sed -e s/\\$/\\$\\$/g
+      register: dashboard_auth_hash
+      changed_when: false  # không đánh dấu task này là "changed"
+      no_log: true  # ẩn password trong ansible logs
+    
+    - name: Set dashboard auth variable
+      set_fact:
+        dashboard_auth: "{{ dashboard_auth_hash.stdout }}"  # lưu hash để dùng cho labels
+      no_log: true  # ẩn hash trong logs
+    
+    - name: Create Traefik base directory
+      file:
+        path: "{{ base_dir }}/traefik"
+        state: directory
+        mode: '0755'
+        owner: prouser
+        group: prouser
+    
+    - name: Create Traefik logs directory
+      file:
+        path: "{{ base_dir }}/traefik/logs"
+        state: directory
+        mode: '0755'
+        owner: prouser
+        group: prouser
+    
+    - name: Create Traefik configuration file
+      copy:
+        dest: "{{ base_dir }}/traefik/traefik.yml"
+        owner: prouser
+        group: prouser
+        mode: '0644'
+        content: |
+          # ====== API và Dashboard ======
+          api:
+            dashboard: true  # bật dashboard web UI
+            # Không dùng insecure: true vì đã có basic auth
+          
+          # ====== Entry Points ======
+          # Định nghĩa các cổng mà Traefik lắng nghe
+          entryPoints:
+            web:
+              address: ":80"  # HTTP, không SSL vì dùng nội bộ
+          
+          # ====== Logging ======
+          log:
+            level: INFO  # DEBUG, INFO, WARN, ERROR
+          
+          # ====== Access Logs ======
+          # Log tất cả requests đến Traefik
+          accessLog:
+            filePath: "/var/log/traefik/access.log"
+            bufferingSize: 100  # buffer 100 logs trước khi ghi ra file
+          
+          # ====== Docker Provider ======
+          # Traefik tự động phát hiện containers
+          providers:
+            docker:
+              endpoint: "unix:///var/run/docker.sock"  # kết nối với Docker daemon
+              exposedByDefault: false  # chỉ route containers có label traefik.enable=true
+              network: traefik_network  # network mặc định để tìm containers
+              watch: true  # tự động phát hiện containers mới/thay đổi
+    
+    - name: Create Traefik network
+      community.docker.docker_network:
+        name: traefik_network
+        state: present
+      check_mode: no  # bắt buộc tạo network ngay cả khi chạy với --check
+    
+    - name: Pull Traefik image (check for updates)
+      community.docker.docker_image:
+        name: traefik:v3.0
+        source: pull
+        force_source: yes  # luôn check digest trên registry (~1-2s nếu đã mới nhất)
+      register: traefik_image_result
+      check_mode: no  # pull ngay cả trong --check mode để kiểm tra updates
+    
+    - name: Start Traefik Container
+      community.docker.docker_container:
+        name: traefik
+        image: traefik:v3.0
+        state: "{{ container_state }}"
+        restart_policy: unless-stopped  # tự động restart khi Docker daemon restart
+        recreate: "{{ traefik_image_result.changed }}"  # chỉ recreate khi có image mới
+        ports:
+          - "80:80"      # HTTP traffic cho các services
+          - "8081:8080"  # Traefik dashboard (đổi sang 8888)
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro  # Docker socket (read-only để bảo mật)
+          - "{{ base_dir }}/traefik/traefik.yml:/traefik.yml:ro"  # Config file
+          - "{{ base_dir }}/traefik/logs:/var/log/traefik"  # Logs directory
+        networks:
+          - name: traefik_network  # network để giao tiếp với các containers khác
+        
+        # ====== Docker Labels ======
+        # Labels để Traefik tự route chính nó
+        labels:
+          traefik.enable: "true"  # bật routing cho Traefik dashboard
+          
+          # ====== Dashboard Router ======
+          # Route dashboard qua domain traefik.netbird.local
+          traefik.http.routers.traefik-dashboard.rule: "Host(`traefik.{{ domain }}`)"
+          traefik.http.routers.traefik-dashboard.entrypoints: "web"  # dùng entrypoint :80
+          traefik.http.routers.traefik-dashboard.service: "api@internal"  # service nội bộ của Traefik
+          traefik.http.routers.traefik-dashboard.middlewares: "dashboard-auth"  # apply authentication
+          
+          # ====== API Router ======
+          # Route API endpoint (/api/...) cũng cần authentication
+          traefik.http.routers.traefik-api.rule: "Host(`traefik.{{ domain }}`) && PathPrefix(`/api`)"
+          traefik.http.routers.traefik-api.entrypoints: "web"
+          traefik.http.routers.traefik-api.service: "api@internal"
+          traefik.http.routers.traefik-api.middlewares: "dashboard-auth"
+          
+          # ====== Basic Auth Middleware ======
+          # Middleware để kiểm tra username/password
+          traefik.http.middlewares.dashboard-auth.basicauth.users: "{{ dashboard_auth }}"
+    
+    # ========================================
+    # HIỂN THỊ THÔNG TIN SAU KHI DEPLOY
+    # ========================================
+    
+    - name: Display Traefik access information
+      debug:
+        msg:
+          - "=========================================="
+          - " Traefik deployed successfully!"
+          - "=========================================="
+          - ""
+          - " Dashboard Access:"
+          - "  - NetBird: http://traefik.{{ domain }}"
+          - "  - LAN:     http://{{ ansible_default_ipv4.address }}:8081"
+          - ""
+          - " Credentials:"
+          - "  - Username: {{ traefik_dashboard_user }}"
+          - "  - Password: (stored in ansible vault)"
+          - ""
+          - " Next Steps:"
+          - "  1. Setup wildcard DNS in NetBird:"
+          - "     *.{{ domain }} -> {{ ansible_default_ipv4.address }}"
+          - ""
+          - "  2. Add labels to containers for auto-routing:"
+          - "     traefik.enable: 'true'"
+          - "     traefik.http.routers.<name>.rule: 'Host(`service.{{ domain }}`)'"
+          - ""
+          - "  3. Access dashboard to monitor services"
+          - ""
+          - " Security:"
+          - "  - Dashboard protected with Basic Auth"
+          - "  - Accessible from both LAN and NetBird VPN"
+          - "  - Docker socket mounted as read-only"
+          - "=========================================="
