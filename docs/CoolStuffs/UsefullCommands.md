@@ -65,5 +65,19 @@
     ansible-doc -l
     ```
 
-## 4. `ansible-galaxy`, `ansible-vault`
-- Tìm hiểu sau
+## 4. `ansible-vault`
+- Thêm password vào ``~/.ansible_vault_pass`` sau đó thêm dòng này vào ``ansible.cfg``:
+    ```
+    vault_password_file = ~/.ansible_vault_pass
+    ```
+- Tạo file ``secrets.yml``:
+    ```
+    EDITOR=nano ansible-vault create vars/secrets.yml
+    ```
+- Sửa file ``secrets.yml``:
+    ```
+    EDITOR=nano ansible-vault edit vars/secrets.yml
+    ```    
+
+
+## 5. `ansible-galaxy`
