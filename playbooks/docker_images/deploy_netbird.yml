@@ -29,10 +29,12 @@
         owner: prouser
         group: prouser
 
-    - name: Download Netbird image
+    - name: Download Netbird image (always runs)
       community.docker.docker_image:
         name: netbirdio/netbird:latest
         source: pull
+        force_source: yes # luôn pull image mới nhất 
+      register: netbird_image_result # xác nhận đã có bản mới hay chưa
 
     - name: Start Netbird Container
       community.docker.docker_container:
@@ -41,6 +43,7 @@
         state: "{{ container_state }}"
         restart_policy: always
         hostname: "{{ peer_name }}"
+        recreate: "{{ netbird_image_result.changed }}" # nếu có bản mới, tạo lại contains
         capabilities:
           - NET_ADMIN
           - SYS_ADMIN
