@@ -2,7 +2,7 @@
 - name: Deploy netbird client
   hosts: homelab
   become: true
-  
+
   vars_files:
     - ../../vars/secrets.yml
 
@@ -10,6 +10,15 @@
     base_dir: "/home/prouser/docker-data"
     container_state: started
     peer_name: "homelab"
+    
+    # Cấu hình SSH
+    enable_ssh_server: true 
+    enable_ssh_sftp: true # bật sftp (chậm vl)
+    enable_ssh_local_port_forwarding: true 
+    enable_ssh_remote_port_forwarding: false
+    enable_ssh_root: false
+    disable_ssh_auth: false
+    ssh_jwt_cache_ttl: 3600 # 1h (thanh hoá giây 💀)
 
   tasks:
     - name: Create Netbird directory
@@ -40,4 +49,16 @@
           NB_SETUP_KEY: "{{ netbird_setup_key }}"
         volumes:
           - "{{ base_dir }}/netbird:/var/lib/netbird"
+          - "/home/prouser/.ssh:/root/.ssh:ro"  # mount .ssh của server vào container
         network_mode: host
+        
+        # ăn cắp từ internet :v
+        command: >-
+          up
+          --allow-server-ssh
+          {% if enable_ssh_sftp %}--enable-ssh-sftp{% endif %}
+          {% if enable_ssh_local_port_forwarding %}--enable-ssh-local-port-forwarding{% endif %}
+          {% if enable_ssh_remote_port_forwarding %}--enable-ssh-remote-port-forwarding{% endif %}
+          {% if enable_ssh_root %}--enable-ssh-root{% endif %}
+          {% if disable_ssh_auth %}--disable-ssh-auth{% endif %}
+          {% if ssh_jwt_cache_ttl > 0 %}--ssh-jwt-cache-ttl {{ ssh_jwt_cache_ttl }}{% endif %}
