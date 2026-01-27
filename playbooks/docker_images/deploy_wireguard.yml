@@ -10,7 +10,6 @@
     pgid: "1000"
     timezone: "Asia/Ho_Chi_Minh"
     wireguard_port: "123" # né firewall của trường
-    server_url: "1.55.178.111" # sau router restart là chết luôn :v
 
   tasks:
     - name: Create WireGuard config
@@ -41,7 +40,7 @@
           PUID: "{{ puid }}"
           PGID: "{{ pgid }}"
           TZ: "{{ timezone }}"
-          SERVERURL: "{{ server_url }}"
+          SERVERURL: "auto"
           SERVERPORT: "{{ wireguard_port }}" 
           PEERS: "phone,laptop"
           PEERDNS: "auto"
