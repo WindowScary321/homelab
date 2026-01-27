@@ -6,13 +6,13 @@
 ## 1. Cài đặt.
 - Chạy
     ```
-    ansible-playbook playbooks/deploy_portainer.yml
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml
     ```
 - Tắt container (Giống ``docker stop``)
     ```
-    ansible-playbook playbooks/deploy_portainer.yml -e "container_state=stopped"
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=stopped"
     ```
 - Xoá container (Giống ``docker remove`` hoặc ``docker compose down``)
     ```
-    ansible-playbook playbooks/deploy_portainer.yml -e "container_state=absent"
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=absent"
     ```

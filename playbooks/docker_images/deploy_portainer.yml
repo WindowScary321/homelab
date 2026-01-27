@@ -8,15 +8,15 @@
     container_state: started # bật tắt container bằng biến này 
 
   tasks:
-    - name: 1. Add docker base folder.
+    - name: Add docker base folder.
       file:
         path: "{{ base_dir }}"
         state: directory
         mode: '0755'
-        owner: prouser # Cho phép t truy cập vào folder này
+        owner: prouser 
         group: prouser
 
-    - name: 2. Add portainer data folder
+    - name: Add portainer data folder
       file:
         path: "{{ base_dir }}/portainer"
         state: directory
@@ -24,12 +24,12 @@
         owner: prouser 
         group: prouser
 
-    - name: 3. Download portainer image
+    - name: Download portainer image
       community.docker.docker_image:
         name: portainer/portainer-ce:lts
         source: pull
 
-    - name: 4. Start portainer 
+    - name: Start portainer Container
       community.docker.docker_container:
         name: portainer
         image: portainer/portainer-ce:lts
