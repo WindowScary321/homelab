@@ -1,5 +1,5 @@
 ---
-- name: Deploy Netbird Client through Docker
+- name: Deploy netbird client
   hosts: homelab
   become: true
   

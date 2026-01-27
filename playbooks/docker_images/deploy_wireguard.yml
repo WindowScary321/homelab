@@ -1,5 +1,5 @@
 ---
-- name: Trien khai WireGuard Server (Firewall Bypass - Port 123)
+- name: Deploy wireguard
   hosts: homelab
   become: true
 
