@@ -4,14 +4,15 @@
   become: true
   
   vars_files:
-    - ../vars/secrets.yml
+    - ../../vars/secrets.yml
 
   vars:
     base_dir: "/home/prouser/docker-data"
+    container_state: started
     peer_name: "homelab"
 
   tasks:
-    - name: 1. Create Netbird directory
+    - name: Create Netbird directory
       file:
         path: "{{ base_dir }}/netbird"
         state: directory
@@ -19,16 +20,16 @@
         owner: prouser
         group: prouser
 
-    - name: 2. Download portainer image
+    - name: Download Netbird image
       community.docker.docker_image:
         name: netbirdio/netbird:latest
         source: pull
 
-    - name: 2. Start Netbird Container
+    - name: Start Netbird Container
       community.docker.docker_container:
         name: netbird-client
         image: netbirdio/netbird:latest
-        state: started
+        state: "{{ container_state }}"
         restart_policy: always
         hostname: "{{ peer_name }}"
         capabilities:
@@ -36,7 +37,6 @@
           - SYS_ADMIN
           - SYS_RESOURCE
         env:
-          # Sử dụng biến đã được giải mã từ file secrets.yml
           NB_SETUP_KEY: "{{ netbird_setup_key }}"
         volumes:
           - "{{ base_dir }}/netbird:/var/lib/netbird"
