@@ -6,8 +6,8 @@
 ## 2. Setup môi trường.
 Setup ban đầu:
 -
-- [ControlNodeSetup](./docs/IntialSetup/EnvSetup.md): setup chính dành cho **Control Node**.
-- [ManangedNodeSetup](./docs/IntialSetup/DockerSetup.md): setup chính dành cho **ManagedNode** hay server.
+- [ControlNodeSetup](./docs/IntialSetup/ControlNodeSetup.md): setup chính dành cho **Control Node**.
+- [ManangedNodeSetup](./docs/IntialSetup/ManangedNodeSetup.md): setup chính dành cho **ManagedNode** hay server.
 - [DockerContainers](./docs/IntialSetup/DockerContainers.md): cài đặt 1 số container quan trọng (chỉ bao gồm thư mục [docker_images](./playbooks/docker_images/))
 - [UsefullCommands](./docs/CoolStuffs/UsefullCommands.md): các commands hữu dụng dành cho **anisble**.
 

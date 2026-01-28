@@ -1,2 +1,2 @@
 # Các Thay đổi tới repo ngày 28/1/26
-- 10:58: Thay đổi toàn bộ readme trong repo này -> TODO: Hoàn thành nốt :v
+Ở ĐÂY CHỈ LƯU TRỮ CÁC COMMIT QUAN TRỌNG VÀ CẦN GIẢI THÍCH TẠI 1 FILE REAME RIÊNG!!!
