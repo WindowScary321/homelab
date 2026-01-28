@@ -3,9 +3,10 @@
   hosts: homelab
   become: true
 
+  vars_files:
+    - ../../vars/global.yml
+
   vars:
-    base_dir: "/home/prouser/docker-data" # sẽ cài các docker image vào thư mục này
-    container_state: started # bật tắt container bằng biến này 
     http_port: 9000 # tắt https dành để kết nối từ traefix 
     https_port: 9443
 
@@ -37,10 +38,11 @@
         image: portainer/portainer-ce:latest
         state: "{{ container_state }}"
         restart_policy: always
+        network_mode: host
         ports:
-          - "8000:8000"
-          - "{{ http_port }}:{{ http_port }}"
-          - "{{ https_port }}:{{ https_port }}"
+           - "8000:8000"
+           - "127.0.0.1:{{ http_port }}:{{ http_port }}"
+           - "127.0.0.1:{{ https_port }}:{{ https_port }}"
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "{{ base_dir }}/portainer:/data"

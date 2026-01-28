@@ -15,8 +15,8 @@ http:
     qbittorrent:
       loadBalancer:
         servers:
-          - url: "http://localhost:8080"
+          - url: "http://127.0.0.1:8080"
     portainer:
       loadBalancer:
         servers:
-          - url: "http://localhost:9000"
+          - url: "http://127.0.0.1:9000"

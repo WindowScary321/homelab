@@ -1,0 +1,10 @@
+# Homelab info
+homelab_user: "prouser"
+homelab_domain: "homelab.netbird.cloud"
+netbird_ip: "100.86.72.27"
+
+# Path 
+base_dir: "/home/prouser/docker-data" # sẽ cài các docker image vào thư mục này
+
+# Setting
+container_state: started # bật tắt container bằng biến này 
