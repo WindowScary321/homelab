@@ -1,4 +1,4 @@
-# Cài đặt môi trường.
+# Cài đặt môi trường ansible dành cho Control Node.
 
 ## 0. Lưu ý.
 - T sẽ dùng debian wsl cho dễ, dm arch khổ dâm vl.
@@ -11,14 +11,14 @@
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ```
-- Thêm khoá private: 
+- Thêm khoá: 
     ```
     nano ~/.ssh/id_ed25519
+    nano ~/.ssh/id_ed25519.pub    ```
+- Cấp quyền, tránh lỗi: 
+    ```
     chmod 600 ~/.ssh/id_ed25519
-    ```
-- Thêm khoá public: 
-    ```
-    nano ~/.ssh/id_ed25519.pub
+    chmod 644 ~/.ssh/id_ed25519.pub
     ```
 - Đẩy lên public key lên server: 
     ```
