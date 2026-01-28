@@ -1,6 +1,6 @@
 # Access controls của Cloudflare Zero Trust
 
-## Method truy cập mà ko cần thêm thẻ ngân hàng.
+## Method truy cập mục "Applications" mà ko cần thêm thẻ ngân hàng.
 - **Hãy vào các URL này bằng trình duyệt, ko cần ``curl``.**
 - **Url gốc**:
 ``https://one.dash.cloudflare.com/id_của_acc/access-controls/apps``
