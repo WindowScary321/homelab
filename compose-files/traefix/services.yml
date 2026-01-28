@@ -1,0 +1,22 @@
+http:
+  routers:
+    qbittorrent:
+      rule: "Host(`qbit.homelab.local`)"
+      service: qbittorrent
+      entryPoints:
+        - web
+    portainer:
+      rule: "Host(`portainer.homelab.local`)"
+      service: portainer
+      entryPoints:
+        - web
+
+  services:
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:8080"
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9000"

@@ -6,6 +6,8 @@
   vars:
     base_dir: "/home/prouser/docker-data" # sẽ cài các docker image vào thư mục này
     container_state: started # bật tắt container bằng biến này 
+    http_port: 9000 # tắt https dành để kết nối từ traefix 
+    https_port: 9443
 
   tasks:
     - name: Add docker base folder.
@@ -26,18 +28,21 @@
 
     - name: Download portainer image
       community.docker.docker_image:
-        name: portainer/portainer-ce:lts
+        name: portainer/portainer-ce:latest
         source: pull
 
     - name: Start portainer Container
       community.docker.docker_container:
         name: portainer
-        image: portainer/portainer-ce:lts
+        image: portainer/portainer-ce:latest
         state: "{{ container_state }}"
         restart_policy: always
         ports:
           - "8000:8000"
-          - "9443:9443"
+          - "{{ http_port }}:{{ http_port }}"
+          - "{{ https_port }}:{{ https_port }}"
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "{{ base_dir }}/portainer:/data"
+        command: 
+          - "--http-enabled"
