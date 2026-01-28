@@ -1,4 +1,4 @@
-# Cài đặt môi trường ansible dành cho Control Node.
+# Cài đặt môi trường dành cho Control Node.
 
 ## 0. Lưu ý.
 - T sẽ dùng debian wsl cho dễ, dm arch khổ dâm vl.
@@ -14,7 +14,7 @@
 - Thêm khoá: 
     ```
     nano ~/.ssh/id_ed25519
-    nano ~/.ssh/id_ed25519.pub    ```
+    nano ~/.ssh/id_ed25519.pub
 - Cấp quyền, tránh lỗi: 
     ```
     chmod 600 ~/.ssh/id_ed25519
@@ -22,20 +22,20 @@
     ```
 - Đẩy lên public key lên server: 
     ```
-    ssh-copy-id username@192.168.100.186
+    ssh-copy-id prouser@192.168.100.186
     ```
 - Test cái.
     ```
-    ssh username@192.168.100.186
+    ssh prouser@192.168.100.186
     # Không phải nhập pass là ok
     ```
 - **Extra**: tắt nhập mật khẩu khi nhập ``sudo``:
     - Sửa file ``/etc/sudoers``
-    - Thêm: ``username ALL=(ALL) NOPASSWD: ALL``
+    - Thêm: ``prouser ALL=(ALL) NOPASSWD: ALL``
     - Đỡ phải gõ lại mật khẩu khi chạy playbooks.
     - Kết nối vào ssh vẫn yêu cầu mk hoặc ssh key.
 
-## 2. Cài đặt pip và ansible
+## 2. Cài đặt ansible
 - Cài pip, nếu cần python thì cài thêm.
     ```
     sudo apt update
@@ -45,13 +45,24 @@
     ```
     pipx ensurepath
     ```
-- Logout sau đó connect lại vào server.
+- Restart shell.
 - Cài ansible:
     ```
     pipx install --include-deps ansible
     ```
 - Test cái:
     ```
-    ansible all -m ping
+    ansible hoặc ansible-playbook
     ```
-- Nhảy sang file [DockerSetup.md](./DockerSetup.md)
+## 3. Cài đặt sau cùng.
+- Sửa ip nếu cần thiết [host.ini](../../inventory/hosts.ini).
+- Thêm mật khẩu có sẵn
+    ```
+    nano ~/.ansible_vault_pass
+    ```
+- Sửa file ``secrets.yml`` nếu khi chạy playbook báo lỗi:
+    ```
+    EDITOR=nano ansible-vault edit vars/secrets.yml
+    # edit -> create để tạo nếu fuck up.
+    ```    
+## 4. Nhảy sang [ManagedNodeSetup.md](./ManangedNodeSetup.md)

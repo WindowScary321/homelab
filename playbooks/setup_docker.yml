@@ -20,6 +20,7 @@
           - rclone
           - fastfetch
           - htop
+          - ufw
         state: present
 
     - name: 3. Create keyrings folder
