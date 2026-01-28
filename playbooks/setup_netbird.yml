@@ -1,0 +1,118 @@
+---
+# This shit is ai slop (Claude Sonnet 4.5 thinking)
+- name: Deploy Netbird Native Client
+  hosts: homelab
+  become: true
+
+  vars_files:
+    - ../vars/secrets.yml
+    - ../vars/global.yml
+
+  vars:    
+    # Cấu hình SSH (giữ nguyên từ file cũ)
+    enable_ssh_server: true
+    enable_ssh_sftp: true
+    enable_ssh_local_port_forwarding: true
+    enable_ssh_remote_port_forwarding: false
+    enable_ssh_root: false
+    disable_ssh_auth: false
+    ssh_jwt_cache_ttl: 3600
+
+  tasks:
+    # BƯỚC 1: Cài đặt Native Client
+    - name: Install required packages
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Create keyrings directory
+      file:
+        path: /usr/share/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download and add Netbird GPG key
+      shell: |
+        curl -sSL https://pkgs.netbird.io/debian/public.key | gpg --dearmor --output /usr/share/keyrings/netbird-archive-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/netbird-archive-keyring.gpg
+
+    - name: Add Netbird repository
+      apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main"
+        filename: netbird
+        state: present
+
+    - name: Update apt cache after adding repo
+      apt:
+        update_cache: yes
+
+    - name: Install Netbird package
+      apt:
+        name: netbird
+        state: present
+
+    # BƯỚC 2: Configure và Connect
+    - name: Build Netbird up command with SSH options
+      set_fact:
+        netbird_command: >-
+          netbird up
+          --setup-key {{ netbird_setup_key }}
+          --hostname {{ homelab_name }}
+          {% if enable_ssh_server %}--allow-server-ssh{% endif %}
+          {% if enable_ssh_sftp %}--enable-ssh-sftp{% endif %}
+          {% if enable_ssh_local_port_forwarding %}--enable-ssh-local-port-forwarding{% endif %}
+          {% if enable_ssh_remote_port_forwarding %}--enable-ssh-remote-port-forwarding{% endif %}
+          {% if enable_ssh_root %}--enable-ssh-root{% endif %}
+          {% if disable_ssh_auth %}--disable-ssh-auth{% endif %}
+          {% if ssh_jwt_cache_ttl > 0 %}--ssh-jwt-cache-ttl {{ ssh_jwt_cache_ttl }}{% endif %}
+
+    - name: Display command to be executed
+      debug:
+        msg: "Executing: {{ netbird_command }}"
+
+    - name: Connect Netbird with setup key
+      shell: "{{ netbird_command }}"
+      register: netbird_up_result
+      changed_when: "'Peer connected' in netbird_up_result.stdout or 'Connected' in netbird_up_result.stdout"
+      failed_when: netbird_up_result.rc != 0 and 'already connected' not in netbird_up_result.stderr
+
+    - name: Display connection result
+      debug:
+        var: netbird_up_result.stdout_lines
+
+    # BƯỚC 3: Enable và Start Systemd Service
+    - name: Enable Netbird systemd service
+      systemd:
+        name: netbird
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Wait for Netbird to be fully connected
+      pause:
+        seconds: 3
+
+    # BƯỚC 4: Verification
+    - name: Get Netbird status
+      command: netbird status
+      register: netbird_status
+      changed_when: false
+
+    - name: Display Netbird status
+      debug:
+        var: netbird_status.stdout_lines
+
+    - name: Get wt0 interface IP
+      shell: ip -4 addr show wt0 | grep inet | awk '{print $2}'
+      register: netbird_ip
+      changed_when: false
+
+    - name: Verify systemd service status
+      command: systemctl is-active netbird
+      register: service_status
+      changed_when: false
