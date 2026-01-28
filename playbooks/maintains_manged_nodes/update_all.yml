@@ -1,0 +1,206 @@
+---
+- name: System Update with Confirmation
+  hosts: homelab
+  become: true
+  gather_facts: true
+
+  vars:
+    update_confirmed: false
+
+  tasks:
+    # ========================================
+    # STEP 1: Check Available Updates
+    # ========================================
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 0
+
+    - name: Get list of upgradable packages
+      shell: apt list --upgradable 2>/dev/null | grep -v "^Listing"
+      register: upgradable_packages
+      changed_when: false
+      failed_when: false
+
+    - name: Count upgradable packages
+      set_fact:
+        upgrade_count: "{{ upgradable_packages.stdout_lines | length }}"
+
+    - name: Display upgradable packages
+      debug:
+        msg:
+          - "=========================================="
+          - "SYSTEM UPDATE REPORT"
+          - "=========================================="
+          - ""
+          - "Total packages to upgrade: {{ upgrade_count }}"
+          - ""
+          - "Package list:"
+      when: upgrade_count | int > 0
+
+    - name: Show package details
+      debug:
+        var: upgradable_packages.stdout_lines
+      when: upgrade_count | int > 0
+
+    - name: No updates available
+      debug:
+        msg: "System is up to date. No packages to upgrade."
+      when: upgrade_count | int == 0
+
+    # ========================================
+    # STEP 2: Confirm Update
+    # ========================================
+    - name: Pause for user confirmation
+      pause:
+        prompt: |
+          
+          ==========================================
+          CONFIRMATION REQUIRED
+          ==========================================
+          
+          Proceed with system upgrade?
+          
+          - {{ upgrade_count }} packages will be upgraded
+          - Services may be restarted
+          - Netbird will be upgraded and restarted
+          
+          Type 'yes' to continue, any other input to abort
+      register: user_confirm
+      when: upgrade_count | int > 0
+
+    - name: Check confirmation
+      set_fact:
+        update_confirmed: "{{ user_confirm.user_input == 'yes' }}"
+      when: upgrade_count | int > 0
+
+    - name: Abort if not confirmed
+      fail:
+        msg: "Update aborted by user"
+      when:
+        - upgrade_count | int > 0
+        - not update_confirmed
+
+    # ========================================
+    # STEP 3: Perform System Update
+    # ========================================
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      register: upgrade_result
+      when: update_confirmed
+
+    - name: Display upgrade summary
+      debug:
+        msg:
+          - "System upgrade completed"
+          - "Packages upgraded: {{ upgrade_result.changed }}"
+      when: update_confirmed
+
+    # ========================================
+    # STEP 4: Update Netbird Specifically
+    # ========================================
+    - name: Check Netbird current version
+      shell: netbird version 2>/dev/null | head -1
+      register: netbird_version_before
+      changed_when: false
+      failed_when: false
+      when: update_confirmed
+
+    - name: Display current Netbird version
+      debug:
+        msg: "Current Netbird version: {{ netbird_version_before.stdout }}"
+      when:
+        - update_confirmed
+        - netbird_version_before.rc == 0
+
+    - name: Upgrade Netbird package
+      apt:
+        name: netbird
+        state: latest
+      register: netbird_upgrade
+      when: update_confirmed
+
+    - name: Restart Netbird service
+      systemd:
+        name: netbird
+        state: restarted
+        daemon_reload: yes
+      when:
+        - update_confirmed
+        - netbird_upgrade.changed
+
+    - name: Wait for Netbird to reconnect
+      pause:
+        seconds: 5
+      when:
+        - update_confirmed
+        - netbird_upgrade.changed
+
+    - name: Check Netbird status after restart
+      command: netbird status
+      register: netbird_status
+      changed_when: false
+      when: update_confirmed
+
+    - name: Display Netbird status
+      debug:
+        var: netbird_status.stdout_lines
+      when: update_confirmed
+
+    - name: Check Netbird new version
+      shell: netbird version 2>/dev/null | head -1
+      register: netbird_version_after
+      changed_when: false
+      failed_when: false
+      when: update_confirmed
+
+    - name: Display version comparison
+      debug:
+        msg:
+          - "Netbird version before: {{ netbird_version_before.stdout }}"
+          - "Netbird version after: {{ netbird_version_after.stdout }}"
+          - "Updated: {{ netbird_upgrade.changed }}"
+      when:
+        - update_confirmed
+        - netbird_version_before.rc == 0
+        - netbird_version_after.rc == 0
+
+    # ========================================
+    # STEP 5: Check if Reboot Required
+    # ========================================
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+      when: update_confirmed
+
+    - name: Display reboot notification
+      debug:
+        msg:
+          - "=========================================="
+          - "REBOOT REQUIRED"
+          - "=========================================="
+          - ""
+          - "A system reboot is recommended."
+          - "Run: sudo reboot"
+      when:
+        - update_confirmed
+        - reboot_required.stat.exists
+
+    # ========================================
+    # STEP 6: Final Summary
+    # ========================================
+    - name: Final summary
+      debug:
+        msg:
+          - "=========================================="
+          - "UPDATE SUMMARY"
+          - "=========================================="
+          - ""
+          - "System packages: {{ 'Updated' if upgrade_result.changed else 'No changes' }}"
+          - "Netbird: {{ 'Updated & Restarted' if netbird_upgrade.changed else 'Already latest version' }}"
+          - "Reboot required: {{ 'Yes' if reboot_required.stat.exists else 'No' }}"
+      when: update_confirmed
