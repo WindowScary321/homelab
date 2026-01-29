@@ -32,17 +32,28 @@
     ```bash
     netbird status
     ```
+## 3. Cài đặt Treafik Reverse Proxy.
+- Chạy: 
+    ```bash
+    ansible-playbook playbooks/docker_images/deploy_treafik.yml
+    ```
+- Nếu thấy tasks ``Verify Traefik is listening on port 80`` báo xanh thì ok.
+- Thêm các dịch vụ mới vào file playbook và https://app.netbird.io/dns/zones.
+
 ## 3. Cài đặt samba (Chia sẻ file dành cho windows, linux, ...)
 - Thêm biến ``smb_password`` nếu chưa có.
 - Chạy:
     ```bash
     ansible-playbook playbooks/setup_samba.yml
     ```
-- Truy cập vào Windows:
+- Kết nối vào smb từ Windows:
+    - Nên sử dụng qua **Netbird VPN**
     - Chuột phải ``This PC``, chọn ``Map network drives...``
-    - TODO
-
-
+    - Chọn kí tự ``Drive``, mục ``Folder`` nhập ``\\ip_client_netbird\\data``
+    - Chọn ``Connect using Different crendentials``
+        - Username: ``prouser``
+        - Password: **Mở lại file secrets.yml**
+    - Xong rồi đấy.
 
 ## 4. Cài đặt Portainer.
 - Chạy:
@@ -51,8 +62,7 @@
     ```
 - Truy cập vào url, tạo tài khoản:
     ```
-    https://ip_của_server:9443 #https
-    http://ip_của_serer:9000 #http
+    http://portainer.homelab.local/
     ```
 
 ## 5. Cài đặt Wireguard.
@@ -67,3 +77,13 @@
     docker logs wireguard # quét mã qr  
     ```
     - hoặc vào ``/home/prouser/docker-data/wireguard/peer_laptop_hoặc_phone`` trên Managed Node.
+
+## 99. Lưu ý
+- Tắt container (Giống ``docker stop``)
+    ```
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=stopped"
+    ```
+- Xoá container (Giống ``docker remove`` hoặc ``docker compose down``)
+    ```
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=absent"
+    ```
