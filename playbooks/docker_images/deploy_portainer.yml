@@ -7,7 +7,6 @@
     - ../../vars/global.yml
 
   vars:
-    http_port: 9000 # tắt https dành để kết nối từ traefix 
     https_port: 9443
 
   tasks:
@@ -38,11 +37,18 @@
         image: portainer/portainer-ce:latest
         state: "{{ container_state }}"
         restart_policy: always
-        network_mode: host
+        recreate: true
+        networks:
+          - name: traefik_net # thêm mạng lan ảo mới
         ports:
-           - "8000:8000"
-           - "127.0.0.1:{{ http_port }}:{{ http_port }}"
-           - "127.0.0.1:{{ https_port }}:{{ https_port }}"
+           #- "8000:8000"
+           #- "127.0.0.1:{{ http_port }}:{{ http_port }}"
+           - "127.0.0.1:9443:9443"
+        labels:
+          "traefik.enable": "true"
+          "traefik.http.routers.portainer.rule": "Host(`portainer.homelab.local`)"
+          "traefik.http.services.portainer.loadbalancer.server.port": "9000"
+          "traefik.http.routers.portainer.entrypoints": "web"
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "{{ base_dir }}/portainer:/data"
