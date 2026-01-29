@@ -2,7 +2,8 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    network_mode: host
+    networks:
+      - traefik_net
     environment:
       - PUID=1000
       - PGID=1000
@@ -13,7 +14,16 @@ services:
       - /home/prouser/docker-data/qbittorrent/config:/config
       - /mnt/data/torrents:/downloads
     ports:
-      - 8080:8080
+      # - 127.0.0.1:8080:8080 # bỏ port này, traffic webui đi qua traefik
       - 54782:54782
       - 54782:54782/udp
+    labels:        
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbit.homelab.local`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.entrypoints=web"
     restart: unless-stopped
+
+networks: # add thí shit
+  traefik_net:
+    external: true
