@@ -9,7 +9,6 @@
   vars:
     traefik_base_dir: "{{ base_dir }}/docker-data/traefik"
     traefik_config_dir: "{{ base_dir }}/traefik/config"
-    # Tên mạng LAN ảo phải khớp với các container khác (Portainer/Qbit)
     docker_network_name: "traefik_net" 
 
   tasks:
@@ -33,7 +32,6 @@
         - "{{ traefik_config_dir }}"
 
     # 3. Tạo file Config Động (Dynamic Config)
-    # Lưu ý: Ta KHÔNG còn map Portainer/Qbit ở đây nữa vì đã dùng Labels.
     # File này giữ lại để bạn có thể thêm Middleware hoặc TLS config sau này.
     - name: Create basic dynamic config file
       copy:
