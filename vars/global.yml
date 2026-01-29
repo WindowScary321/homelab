@@ -1,5 +1,6 @@
 # Homelab info
 homelab_user: "prouser"
+homelab_name: "homelab"
 homelab_domain: "homelab.netbird.cloud"
 netbird_ip: "100.86.77.119"
 
