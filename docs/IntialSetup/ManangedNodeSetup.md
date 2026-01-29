@@ -32,6 +32,10 @@
     ```bash
     netbird status
     ```
+- Tắt servie để debug:
+    ```bash
+    ansible homelab -a "sudo netbird down"
+    ```
 ## 3. Cài đặt Treafik Reverse Proxy.
 - Chạy: 
     ```bash

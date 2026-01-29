@@ -9,13 +9,13 @@
     - ../vars/global.yml
 
   vars:    
-    # Cấu hình SSH (giữ nguyên từ file cũ)
+    # Cấu hình SSH
     enable_ssh_server: true
     enable_ssh_sftp: true
     enable_ssh_local_port_forwarding: true
-    enable_ssh_remote_port_forwarding: false
-    enable_ssh_root: false
-    disable_ssh_auth: false
+    enable_ssh_remote_port_forwarding: true
+    enable_ssh_root: true
+    disable_ssh_auth: true
     ssh_jwt_cache_ttl: 3600
 
   tasks:
@@ -63,13 +63,13 @@
           netbird up
           --setup-key {{ netbird_setup_key }}
           --hostname {{ homelab_name }}
-          {% if enable_ssh_server %}--allow-server-ssh{% endif %}
-          {% if enable_ssh_sftp %}--enable-ssh-sftp{% endif %}
-          {% if enable_ssh_local_port_forwarding %}--enable-ssh-local-port-forwarding{% endif %}
-          {% if enable_ssh_remote_port_forwarding %}--enable-ssh-remote-port-forwarding{% endif %}
-          {% if enable_ssh_root %}--enable-ssh-root{% endif %}
-          {% if disable_ssh_auth %}--disable-ssh-auth{% endif %}
-          {% if ssh_jwt_cache_ttl > 0 %}--ssh-jwt-cache-ttl {{ ssh_jwt_cache_ttl }}{% endif %}
+          {% if enable_ssh_server %}--allow-server-ssh {% endif %}
+          {% if enable_ssh_server and enable_ssh_sftp %}--enable-ssh-sftp {% endif %}
+          {% if enable_ssh_server and enable_ssh_local_port_forwarding %}--enable-ssh-local-port-forwarding {% endif %}
+          {% if enable_ssh_server and enable_ssh_remote_port_forwarding %}--enable-ssh-remote-port-forwarding {% endif %}
+          {% if enable_ssh_server and enable_ssh_root %}--enable-ssh-root {% endif %}
+          {% if enable_ssh_server and disable_ssh_auth %}--disable-ssh-auth {% endif %}
+          {% if enable_ssh_server and ssh_jwt_cache_ttl > 0 %}--ssh-jwt-cache-ttl {{ ssh_jwt_cache_ttl }} {% endif %}
 
     - name: Display command to be executed
       debug:
