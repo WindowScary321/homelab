@@ -43,7 +43,7 @@
         ports:
            #- "8000:8000"
            #- "127.0.0.1:{{ http_port }}:{{ http_port }}"
-           - "127.0.0.1:9443:9443"
+           - "9443:9443"
         labels:
           "traefik.enable": "true"
           "traefik.http.routers.portainer.rule": "Host(`portainer.homelab.local`)"
