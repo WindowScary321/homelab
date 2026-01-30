@@ -13,8 +13,9 @@
     - Chỉ cần chú ý thuộc tính **id** và **type**
 - **Truy cập vào Application**:
     ```
-    https://one.dash.cloudflare.com/id_của_acc/access-controls/apps/type_ở_trên/id_ở_trên
+    https://one.dash.cloudflare.com/id_của_acc/access-controls/apps/edit/id_ở_trên
     ```
+    - Hoặc dùng thanh search gõ tên của application.
 - **Dùng api để kiểm tra thông tin của Application**
     ```
     https://dash.cloudflare.com/api/v4/accounts/id_của_acc/access/apps/id_ở_trên
