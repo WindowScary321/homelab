@@ -1,17 +1,17 @@
 ---
-- name: Migrate to Cloudflare Tunnel
+- name: Deploy Cloudflare Tunnel
   hosts: homelab
   become: true
 
   vars_files:
     - ../../vars/secrets.yml
   vars:
-    docker_network_name: "traefik_net"
+    docker_network_name: "cloudflared_net"
     network_subnet: "172.18.0.0/16"
     network_gateway: "172.18.0.1"
 
   tasks:
-    - name: Create custom Docker network with fixed subnet
+    - name: Create Docker network
       community.docker.docker_network:
         name: "{{ docker_network_name }}"
         driver: bridge
@@ -31,4 +31,4 @@
           TUNNEL_TOKEN: "{{ cloudflare_tunnel_token }}"
         
         networks:
-          - name: traefik_net
+          - name: cloudflared_net

@@ -39,7 +39,7 @@
         restart_policy: always
         recreate: true
         networks:
-          - name: traefik_net # thêm mạng lan ảo mới
+          - name: cloudflared_net # thêm mạng lan ảo mới
         ports:
            #- "8000:8000"
            #- "127.0.0.1:{{ http_port }}:{{ http_port }}"

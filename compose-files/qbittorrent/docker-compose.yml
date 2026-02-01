@@ -3,7 +3,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     networks:
-      - traefik_net
+      - cloudflared_net
     environment:
       - PUID=1000
       - PGID=1000
@@ -19,5 +19,5 @@ services:
     restart: unless-stopped
 
 networks: # add thí shit
-  traefik_net:
+  cloudflared_net:
     external: true
