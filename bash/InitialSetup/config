@@ -1,0 +1,4 @@
+Host homelab
+    HostName homelab.netbird.cloud
+    User prouser
+    IdentityFile ~/.ssh/id_ed25519
