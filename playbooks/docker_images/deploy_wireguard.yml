@@ -9,7 +9,7 @@
     puid: "1000"
     pgid: "1000"
     timezone: "Asia/Ho_Chi_Minh"
-    wireguard_port: "123" # né firewall của trường
+    wireguard_port: "443" # né firewall của trường
 
   tasks:
     - name: Create WireGuard config
@@ -34,6 +34,9 @@
         capabilities:
           - NET_ADMIN
           - SYS_MODULE
+        dns_servers:
+          - 8.8.8.8
+          - 1.1.1.1
         sysctls:
           net.ipv4.conf.all.src_valid_mark: "1"
         env:
