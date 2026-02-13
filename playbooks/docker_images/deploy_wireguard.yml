@@ -3,9 +3,10 @@
   hosts: homelab
   become: true
 
+  vars_files:
+    - ../../vars/global.yml
+
   vars:
-    base_dir: "/home/prouser/docker-data"
-    container_state: started
     puid: "1000"
     pgid: "1000"
     timezone: "Asia/Ho_Chi_Minh"
