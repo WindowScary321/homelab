@@ -5,6 +5,7 @@
 
   vars_files:
     - ../../vars/secrets.yml
+    - ../../vars/global.yml
   vars:
     docker_network_name: "cloudflared_net"
     network_subnet: "172.18.0.0/16"
@@ -24,8 +25,10 @@
       community.docker.docker_container:
         name: cloudflared
         image: cloudflare/cloudflared:latest
-        state: started
+        state: "{{ container_state }}"
         restart_policy: unless-stopped
+        pull: always # luôn pull image mới khi chạy playbook này
+        recreate: true # luôn tạo container mới khi chạy playbook
         command: tunnel run
         env:
           TUNNEL_TOKEN: "{{ cloudflare_tunnel_token }}"
