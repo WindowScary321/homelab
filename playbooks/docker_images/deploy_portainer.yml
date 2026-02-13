@@ -26,18 +26,14 @@
         owner: prouser 
         group: prouser
 
-    - name: Download portainer image
-      community.docker.docker_image:
-        name: portainer/portainer-ce:latest
-        source: pull
-
     - name: Start portainer Container
       community.docker.docker_container:
         name: portainer
         image: portainer/portainer-ce:latest
         state: "{{ container_state }}"
         restart_policy: always
-        recreate: true
+        pull: always # luôn pull image mới khi chạy playbook 
+        recreate: true # luôn tạo container mới khi chạy playbook
         networks:
           - name: cloudflared_net # thêm mạng lan ảo mới
         ports:
