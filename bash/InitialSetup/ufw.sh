@@ -5,7 +5,7 @@
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 22/tcp  # cho phép ssh
-sudo ufw allow 443/udp # cho phép wireguard (đổi port để nén firewall trường)
+sudo ufw allow 123/udp # cho phép wireguard (đổi port để nén firewall trường)
 sudo ufw allow in on wt0 # cho phép giao diện mạng của netbird
 sudo ufw allow 54782 # cho phép port của qbittorrent
 

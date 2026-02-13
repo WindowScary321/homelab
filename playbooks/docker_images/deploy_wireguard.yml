@@ -20,16 +20,13 @@
         owner: prouser
         group: prouser
 
-    - name: Download WireGuard image
-      community.docker.docker_image:
-        name: lscr.io/linuxserver/wireguard:latest
-        source: pull
-
     - name: Start WireGuard Container
       community.docker.docker_container:
         name: wireguard
         image: lscr.io/linuxserver/wireguard:latest
         state: "{{ container_state }}"
+        pull: always # luôn pull image mới khi chạy playbook 
+        recreate: true # luôn tạo container mới khi chạy playbook
         restart_policy: unless-stopped
         capabilities:
           - NET_ADMIN
