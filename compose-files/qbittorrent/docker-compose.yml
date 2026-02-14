@@ -2,6 +2,7 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    restart: unless-stopped
     networks:
       - cloudflared_net
     environment:
@@ -16,7 +17,8 @@ services:
     ports:
       - 54782:54782
       - 54782:54782/udp
-    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true" # auto update container bằng watchtower
 
 networks: # add thí shit
   cloudflared_net:
