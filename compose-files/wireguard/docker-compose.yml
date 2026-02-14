@@ -1,5 +1,7 @@
 services:
   wireguard:
+    env_file:
+      - ../.env.global
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
     restart: unless-stopped
@@ -25,7 +27,7 @@ services:
     ports:
       - "123:51820/udp"
     volumes:
-      - /home/prouser/docker-data/wireguard:/config
+      - ${BASE_DIR}/wireguard:/config
       - /lib/modules:/lib/modules:ro
     labels:
       - "com.centurylinklabs.watchtower.enable=true" # auto update container bằng watchtower

@@ -1,5 +1,7 @@
 services:
   qbittorrent:
+    env_file:
+      - ../.env.global
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
@@ -12,7 +14,7 @@ services:
       - WEBUI_PORT=8080
       - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
     volumes:
-      - /home/prouser/docker-data/qbittorrent/config:/config
+      - ${BASE_DIR}/qbittorrent/config:/config
       - /mnt/data/torrents:/downloads
     ports:
       - 54782:54782
