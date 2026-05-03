@@ -42,3 +42,5 @@
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "{{ base_dir }}/portainer:/data"
+        labels:
+          com.centurylinklabs.watchtower.enable: "true"
