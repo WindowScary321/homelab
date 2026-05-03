@@ -1,16 +1,14 @@
----
-
 - name: Docker install in homelab
   hosts: homelab
   become: true  # Chạy với quyền root
 
   tasks:
-    - name: 1. Update with apt
+    - name: 1. update apt repository
       apt:
         update_cache: yes
         cache_valid_time: 3600
 
-    - name: 2. Install depedency and extra stuffs
+    - name: 2. install depedency and extra stuffs
       apt:
         name:
           - ca-certificates
@@ -21,9 +19,11 @@
           - fastfetch
           - htop
           - ufw
+          - smartmontools 
+          - git
         state: present
 
-    - name: 3. Create keyrings folder
+    - name: 3. create keyrings folder
       file:
         path: /etc/apt/keyrings
         state: directory
@@ -42,7 +42,7 @@
         state: present
         filename: docker
         
-    - name: 6. Install docker
+    - name: 6. install docker
       apt:
         name:
           - docker-ce
@@ -53,13 +53,13 @@
         state: present
         update_cache: yes
 
-    - name: 7. Khoi dong Docker
+    - name: 7. Start Docker service
       service:
         name: docker
         state: started
         enabled: yes
 
-    - name: 8. add myself to docker grop
+    - name: 8. add prouser to docker groups
       user:
         name: prouser
         groups: docker
