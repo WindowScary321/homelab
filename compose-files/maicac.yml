@@ -1,0 +1,41 @@
+services:
+  maicac:
+    container_name: maicac
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
+    tty: true
+    stdin_open: true
+    ports:
+      - 25565:25565
+    environment:
+      MAX_PLAYERS: 10
+      ONLINE_MODE: false
+      TZ: Asia/Ho_Chi_Minh
+      EULA: "TRUE"
+      USE_MEOWICE_FLAGS: true
+      MEMORY: 8G
+      TYPE: PAPER
+      VERSION: 26.1.2
+      MOTD: "Alo vũ à vũ?"
+      ICON: "https://files.catbox.moe/sbijz8.jpg"
+      MODRINTH_PROJECTS: |
+        authmerereloaded
+        tab-was-taken
+        oneplayersleepgg
+        tpaa
+        veinminer
+        luckperms
+      VERSION_FROM_MODRINTH_PROJECTS: true
+      ENABLE_AUTOPAUSE: "true"
+      MAX_TICK_TIME: "-1"          # Bắt buộc để tránh server tự restart
+      AUTOPAUSE_TIMEOUT_EST: "120"  # Pause sau 2 phút không có ai
+      AUTOPAUSE_TIMEOUT_INIT: "60"  # Pause sau 1 phút nếu chưa ai vào lần đầu
+    volumes:
+      - /opt/docker-data/maicac/data:/data
+      - /opt/docker-data/maicac/config:/config
+    restart: unless-stopped
+    healthcheck:
+      test: mc-health
+      start_period: 1m
+      interval: 10s
+      
