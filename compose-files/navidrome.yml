@@ -1,0 +1,23 @@
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: 1000:1000
+    restart: unless-stopped
+    ports:
+      - 4533:4533
+    volumes:
+      - /opt/docker-data/navidrome:/data
+      - "/home/prouser/Music/Poweramp songs:/music:ro"
+    networks:
+      - cloudflared_net
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    environment:
+      - ND_LASTFM_APIKEY=REDACTED         
+      - ND_LASTFM_SECRET=REDACTED           
+      - ND_LOGLEVEL=info
+
+networks:
+  cloudflared_net:
+    external: true
