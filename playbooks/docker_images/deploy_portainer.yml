@@ -6,9 +6,6 @@
   vars_files:
     - ../../vars/global.yml
 
-  vars:
-    https_port: 9443
-
   tasks:
     - name: Add docker base folder.
       file:
@@ -37,8 +34,7 @@
         networks:
           - name: cloudflared_net # thêm mạng lan ảo mới
         ports:
-           #- "8000:8000"
-           - "100.86.77.119:9443:9443" # bind ip tĩnh của netbird, chặn truy cập từ lan
+           - 9443:9443
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "{{ base_dir }}/portainer:/data"

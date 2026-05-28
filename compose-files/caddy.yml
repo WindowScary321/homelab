@@ -1,0 +1,32 @@
+configs:
+  caddyfile:
+    content: |
+      nhac.homelab.local {
+        reverse_proxy navidrome:4533
+      }
+      
+      pt.homelab.local {
+        reverse_proxy portainer:9000
+      }
+
+      qbit.homelab.local {
+        reverse_proxy qbittorrent:9067
+      }      
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    networks:
+      - cloudflared_net
+      
+networks:
+  cloudflared_net:
+    external: true
