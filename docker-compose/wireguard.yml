@@ -17,15 +17,15 @@ services:
       - TZ=Asia/Ho_Chi_Minh
       - SERVERURL=auto
       - SERVERPORT=123
-      - PEERS=phone,laptop
+      - PEERS=laptop,pc,mobile
       - PEERDNS=auto
       - INTERNAL_SUBNET=10.13.13.0
       - ALLOWEDIPS=0.0.0.0/0
       - LOG_CONFS=true
     ports:
-      - "123:51820/udp"
+      - 123:51820/udp # đổi port để né firewall của trường
     volumes:
       - /opt/docker-data/wireguard:/config
       - /lib/modules:/lib/modules:ro
     labels:
-      - "com.centurylinklabs.watchtower.enable=true" # auto update container bằng watchtower
+      - com.centurylinklabs.watchtower.enable=true 

@@ -11,7 +11,6 @@ services:
       - TZ=Asia/Ho_Chi_Minh
       - WEBUI_PORT=9067
       - TORRENTING_PORT=54782
-      # - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
     volumes:
       - /opt/docker-data/qbittorrent:/config
       - /mnt/data/torrents:/downloads
@@ -21,8 +20,7 @@ services:
       - 54782:54782
       - 54782:54782/udp
     labels:
-      - com.centurylinklabs.watchtower.enable=true # auto update container bằng watchtower
+      - com.centurylinklabs.watchtower.enable=true
 networks:
-  # add thí shit
   cloudflared_net:
     external: true

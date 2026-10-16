@@ -1,5 +1,5 @@
 services:
-  maicac:
+  maicac: # Outdate vì lâu ko host server
     container_name: maicac
     image: itzg/minecraft-server:latest
     pull_policy: daily
@@ -27,7 +27,7 @@ services:
         luckperms
       VERSION_FROM_MODRINTH_PROJECTS: true
       ENABLE_AUTOPAUSE: "true"
-      MAX_TICK_TIME: "-1"          # Bắt buộc để tránh server tự restart
+      MAX_TICK_TIME: "-1"           # Bắt buộc để tránh server tự restart
       AUTOPAUSE_TIMEOUT_EST: "120"  # Pause sau 2 phút không có ai
       AUTOPAUSE_TIMEOUT_INIT: "60"  # Pause sau 1 phút nếu chưa ai vào lần đầu
     volumes:
@@ -38,4 +38,3 @@ services:
       test: mc-health
       start_period: 1m
       interval: 10s
-      
