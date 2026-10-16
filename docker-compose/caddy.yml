@@ -2,7 +2,7 @@ configs:
   caddyfile:
     content: |
       nhac.homelab.local {
-        reverse_proxy navidrome:4533
+        reverse_proxy navidrome:4537
       }
       
       pt.homelab.local {
@@ -11,7 +11,7 @@ configs:
 
       qbit.homelab.local {
         reverse_proxy qbittorrent:9067
-      }      
+      }  
 
 services:
   caddy:
@@ -26,6 +26,14 @@ services:
         target: /etc/caddy/Caddyfile
     networks:
       - cloudflared_net
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      
+    # ko có dữ liệu để sao lưu đâu
+    volumes:
+      - /opt/docker-data/caddy/data:/data
+      - /opt/docker-data/caddy/config:/config
+      
       
 networks:
   cloudflared_net:

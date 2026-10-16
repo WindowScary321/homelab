@@ -5,7 +5,7 @@ services:
     user: 1000:1000
     restart: unless-stopped
     ports:
-      - 4533:4533
+      - 4537:4537
     volumes:
       - /opt/docker-data/navidrome:/data
       - "/home/prouser/Music/Poweramp songs:/music:ro"
@@ -14,9 +14,13 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
     environment:
-      - ND_LASTFM_APIKEY=REDACTED         
-      - ND_LASTFM_SECRET=REDACTED           
+      - ND_PORT=4537
+      - ND_LASTFM_APIKEY=REDACTED # lộ api key rồi ...
+      - ND_LASTFM_SECRET=REDACTED # lộ api key rồi ...
       - ND_LOGLEVEL=info
+      - ND_PLUGINS_ENABLED=true
+      - ND_PLUGINS_FOLDER=/data/plugins
+      - ND_PLUGINS_AUTORELOAD=true
 
 networks:
   cloudflared_net:
