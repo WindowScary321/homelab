@@ -57,17 +57,12 @@
     ```
 
 ## 5. Cài đặt Caddy Reverse Proxy
-- Import [caddy.yml](../../docker-compose/caddy.yml)
+- Import [caddy.yml](../../docker-compose/caddy.yml) vào Portainer
 - Thêm các subdomain vào file compose và https://app.netbird.io/dns/zones
 
 ## 6. Cài đặt Wireguard.
-- Mở port ``123/udp`` hoặc đổi về mặc định ``51820/udp`` trong file [này](../../playbooks/docker_images/deploy_wireguard.yml)
-- Thêm hoặc xoá peer nếu muốn
-- Chạy
-    ```bash
-    ansible-playbook playbooks/docker_images/deploy_wireguard.yml
-    ```
-- Lấy config
+- Import [wireguard.yml](../../docker-compose/wireguard.yml) vào Portainer
+- Lấy config kết nối vpn
     ```bash
     docker logs wireguard # quét mã qr  
     ```

@@ -10,6 +10,6 @@
 id_rsa
 id_ed25519
 
-# Dokcer stuffs
+# Docker stuffs
 docker-data/
 .env

@@ -4,15 +4,9 @@
 Đây là 1 số "attempt" self-host của t sử dụng _ansible_, _docker_ và _linux shell_ nhắm mục đích và học tập [IAC](https://viblo.asia/p/infrastructure-as-code-la-gi-tai-sao-lai-chon-terraform-LzD5dwrEljY). Các setup này hoàn toàn nhằm mục đích cá nhân nên sẽ có (nhiều) vấn đề trong quá trình vận hành.
 
 ## 2. Setup môi trường.
-Setup ban đầu:
--
-- [ControlNodeSetup](./docs/IntialSetup/ControlNodeSetup.md): setup chính dành cho **Control Node**.
-- [ManangedNodeSetup](./docs/IntialSetup/ManangedNodeSetup.md): setup chính dành cho **ManagedNode** hay server.
-- [DockerContainers](./docs/IntialSetup/DockerContainers.md): cài đặt 1 số container quan trọng (chỉ bao gồm thư mục [docker_images](./playbooks/docker_images/))
-- [UsefullCommands](./docs/CoolStuffs/UsefullCommands.md): các commands hữu dụng dành cho **anisble**.
 
 Cấu trúc dự án:      
-- compose-files (Chứa các compose triển khai bên trong Portainer)
+- docker-compose (Chứa các compose triển khai bên trong Portainer)
     - [caddy](./docker-compose/caddy.yml)
     - [maicac](./docker-compose/maicac.yml) (ít dc sử dụng)
     - [navidrome](./docker-compose/navidrome.yml)
@@ -21,7 +15,7 @@ Cấu trúc dự án:
     - [wireguard](./docker-compose/wireguard.yml) (đã dc thay thế bằng netbird)
 - docs
      - [Control Node Initial Setup](./docs/InitialSetup/ControlNodeSetup.md): các setup lần đầu của control node
-     - [Mananged Node Setup](./docs/InitialSetup/ManangedNodeSetup.md)
+     - [Mananged Node Setup](./docs/InitialSetup/ManangedNodeSetup.md): các setup lần đầu của managed node
      - [Ansible Usefull Commands](./docs/CoolStuffs/UsefullCommands.md): các command hữu ích khi sử dụng ansible
 - inventory
     - [hosts.ini](./inventory/hosts.ini): chứa các host sẽ dc sử dụng bởi playbooks
