@@ -35,3 +35,6 @@ Cấu trúc dự án:
     
 ## 3. Mục tiêu tương lai
 - Tìm hiều thêm về IAC, viết blog ghi lại cập nhật của từng commit vào 1 folder riêng.
+
+## 4. Other
+- [Odoo 19 install script](https://github.com/SadHilarious/odoo19-install-script): Phiên bản Odoo "lậu" sử dụng để thực hành môn [ISM302](https://cmshn.fpt.edu.vn/course/index.php?categoryid=436)
