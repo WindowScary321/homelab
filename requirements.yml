@@ -1,0 +1,7 @@
+---
+# Cài dependency: ansible-galaxy collection install -r requirements.yml
+# Pin thêm version nếu cần tái lập môi trường, vd:
+#   - name: community.docker
+#     version: ">=3.0.0"
+collections:
+  - name: community.docker
