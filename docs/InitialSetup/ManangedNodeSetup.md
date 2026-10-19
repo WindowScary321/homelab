@@ -66,7 +66,7 @@
     ```
 - Truy cập vào url, tạo tài khoản:
     ```
-    http://portainer.homelab.local/
+    http://homelab.netbird.cloud:9443/
     ```
 
 ## 5. Cài đặt Wireguard.
