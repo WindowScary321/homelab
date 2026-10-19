@@ -12,33 +12,26 @@ Setup ban đầu:
 - [UsefullCommands](./docs/CoolStuffs/UsefullCommands.md): các commands hữu dụng dành cho **anisble**.
 
 Cấu trúc dự án:      
--
-- compose-files (chứa các file docker-compose.yml ko quá quan trọng hoặc chưa đưa vào playbook chính)
-    - [qbittorrent](./compose-files/qbittorrent/)
-    - [traefik](./compose-files/traefik/): bao gồm thêm 1 file config
+- compose-files (Chứa các compose triển khai bên trong Portainer)
+    - [caddy](./docker-compose/caddy.yml)
+    - [maicac](./docker-compose/maicac.yml) (ít dc sử dụng)
+    - [navidrome](./docker-compose/navidrome.yml)
+    - [qbittorrent](./docker-compose/qbittorrent.yml)
+    - [watchtower](./docker-compose/watchtower.yml)
+    - [wireguard](./docker-compose/wireguard.yml) (đã dc thay thế bằng netbird)
 - docs
-     - [IntialSetup](./docs/IntialSetup/): các setup lần đầu
-     - [CoolStuffs](./docs/CoolStuffs/): fun facts
+     - [Control Node Initial Setup](./docs/InitialSetup/ControlNodeSetup.md): các setup lần đầu của control node
+     - [Mananged Node Setup](./docs/InitialSetup/ManangedNodeSetup.md)
+     - [Ansible Usefull Commands](./docs/CoolStuffs/UsefullCommands.md): các command hữu ích khi sử dụng ansible
 - inventory
     - [hosts.ini](./inventory/hosts.ini): chứa các host sẽ dc sử dụng bởi playbooks
 - playbooks
     - [docker_images](./playbooks/docker_images/): các docker quan trọng
-    - [maintains_manged_nodes](./playbooks/maintains_manged_nodes/): playbooks quản lý các **managed node**.
+    - [maintains_manged_nodes](./playbooks/maintains_manged_nodes/): playbooks quản lý các **managed node**
 - vars
-    - [global.yml](./vars/global.yml): biến toàn cục, ko quá nguy hiểm.
-    - [secrets.yml](./vars/secrets.yml): biến bí mật, chứa api key hay các thông tin cần dc bảo mật.
-- [ansible.cfg](./ansible.cfg): config tổng của toàn bộ playbook.
+    - [global.yml](./vars/global.yml): biến toàn cục, ko quá nguy hiểm
+    - [secrets.yml](./vars/secrets.yml): biến bí mật, chứa api key hay các thông tin cần dc bảo mật
+- [ansible.cfg](./ansible.cfg): config tổng của toàn bộ playbook
     
 ## 3. Mục tiêu tương lai
-- Viết nối đống readme ở [ControlNodeSetup.md](./docs/IntialSetup/ControlNodeSetup.md) sau đó là [DockerContainers.md](./docs/IntialSetup/DockerContainers.md)
 - Tìm hiều thêm về IAC, viết blog ghi lại cập nhật của từng commit vào 1 folder riêng.
-- Đưa [Treafik Proxy](./compose-files/traefik/) làm file playbook chính, sẽ được thực thi nếu **managed node** hiện tại nổ tung.
-- Host 1 server maicac hoặc các server game tương tự.
-- Host 1 website cơ bản thông qua (Cloudflare tunnel hoặc ko): 
-    - Có HTTPS (AMCE challenge).
-    - Đặt phía sau Cloudflare Proxy.
-    - Thành thạo Treafik, Canndy hoặc nginx.
-
-
-## 99. Trick lỏd
-- Cloudflare zero trust - Application Access Control bypass ở [đây](./docs/CoolStuffs/CFZeroTrust/access-apps.md)
