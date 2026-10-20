@@ -12,6 +12,11 @@
     network_gateway: "172.18.0.1"
 
   tasks:
+    - name: Check if Docker network exists
+      community.docker.docker_network_info:
+        name: "{{ docker_network_name }}"
+      register: cloudflared_net_info
+
     - name: Create Docker network
       community.docker.docker_network:
         name: "{{ docker_network_name }}"
@@ -20,6 +25,7 @@
           - subnet: "{{ network_subnet }}"
             gateway: "{{ network_gateway }}"
         state: present
+      when: not cloudflared_net_info.exists
 
     - name: Run Cloudflare Tunnel container
       community.docker.docker_container:

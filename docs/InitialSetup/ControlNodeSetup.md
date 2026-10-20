@@ -11,6 +11,7 @@
     ```
     nano ~/.ssh/id_ed25519
     nano ~/.ssh/id_ed25519.pub
+    ```
 - Cấp quyền, tránh lỗi: 
     ```
     chmod 600 ~/.ssh/id_ed25519

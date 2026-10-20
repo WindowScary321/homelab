@@ -10,6 +10,10 @@
     docker_arch: "{{ {'x86_64': 'amd64', 'aarch64': 'arm64', 'armv7l': 'armhf'}.get(ansible_architecture, ansible_architecture) }}"
 
   tasks:
+    - name: 0. bootstrap python3-apt (apt module cần nó trước khi chạy)
+      raw: dpkg -s python3-apt >/dev/null 2>&1 || (apt-get update -y && apt-get install -y python3-apt)
+      changed_when: false
+
     - name: 1. update apt repository
       apt:
         update_cache: yes

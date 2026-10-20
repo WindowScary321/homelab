@@ -23,10 +23,10 @@
     ```
 - `--start-at-task` chạy ở task nào, debug cái
     ```
-    ansible-playbook playbooks/docker_images/deploy_portainer.yml --start-at-task
+    ansible-playbook playbooks/docker_images/deploy_portainer.yml --start-at-task "Start portainer Container"
     ```
 
-## 1. `ansible`
+## 2. `ansible`
 - Ping managed node
     ```bash
     ansible all -m ping
@@ -43,17 +43,17 @@
     ```bash
     ansible homelab -m apt -a "name=htop state=present" --become
     ```
-## 2. `ansible-console`
+## 3. `ansible-console`
 - Tạo 1 shell tương tác giống dành cho server
     ```
     ansible-console homelab
     ```
-## 2. `ansible-inventory`
+## 4. `ansible-inventory`
 - Xem danh sách máy dưới dạng Graph
     ```bash
     ansible-inventory --graph
     ```
-## 3. `ansible-doc`
+## 5. `ansible-doc`
 - Tra cứu cách dùng module docker_container
     ```bash
     ansible-doc community.docker.docker_container
@@ -63,7 +63,7 @@
     ansible-doc -l
     ```
 
-## 4. `ansible-vault`
+## 6. `ansible-vault`
 - Thêm password vào ``~/.ansible_vault_pass`` sau đó thêm dòng này vào ``ansible.cfg``
     ```
     vault_password_file = ~/.ansible_vault_pass
@@ -78,7 +78,7 @@
     ```    
 
 
-## 5. `ansible-galaxy`
+## 7. `ansible-galaxy`
 Bổ sung lệnh cài dependency
 ```
 ansible-galaxy collection install -r requirements.yml 

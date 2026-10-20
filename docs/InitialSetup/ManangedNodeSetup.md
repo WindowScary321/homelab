@@ -61,22 +61,22 @@
     ```
 - Truy cập vào url, tạo tài khoản:
     ```
-    http://homelab.netbird.cloud:9443/
+    https://homelab.netbird.cloud:9443/
     ```
 
 ## 6. Cài đặt Caddy Reverse Proxy
 - Import [caddy.yml](../../docker-compose/caddy.yml) vào Portainer
 - Thêm các subdomain vào file compose và https://app.netbird.io/dns/zones
 
-## 8. Cài đặt Wireguard.
+## 7. Cài đặt Wireguard.
 - Import [wireguard.yml](../../docker-compose/wireguard.yml) vào Portainer
 - Lấy config kết nối vpn
     ```bash
     docker logs wireguard # quét mã qr  
     ```
-    - hoặc vào ``/opt/docker-data//wireguard/peer_laptop_hoặc_phone`` trên Managed Node.
+    - hoặc vào ``/opt/docker-data/wireguard/peer_laptop_hoặc_phone`` trên Managed Node.
 
-## . Lưu ý
+## 8. Lưu ý
 - Tắt container (Giống ``docker stop``)
     ```
     ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=stopped"
