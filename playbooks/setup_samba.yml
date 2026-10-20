@@ -5,9 +5,10 @@
   
   vars_files:
     - ../vars/secrets.yml
+    - ../vars/global.yml
 
   vars:
-    samba_user: prouser
+    samba_user: "{{ homelab_user }}"
     share_path: /mnt/data
     share_name: Data
 
@@ -49,7 +50,8 @@
       changed_when: false
 
     - name: Create Samba user and set password
-      shell: "(echo '{{ smb_password }}'; echo '{{ smb_password }}') | smbpasswd -s -a {{ samba_user }}"
+      command: smbpasswd -s -a {{ samba_user }}
+      stdin: "{{ smb_password }}\n{{ smb_password }}"
       no_log: true
       when: samba_user_check.rc != 0 # nếu đã có user, bỏ qua bước này
 

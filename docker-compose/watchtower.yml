@@ -1,4 +1,4 @@
- services:
+services:
   watchtower:
     image: nickfedor/watchtower:latest # containrrr (chủ dự án cũ) đã archive repo, đổi sang fork mới hơn
     container_name: watchtower

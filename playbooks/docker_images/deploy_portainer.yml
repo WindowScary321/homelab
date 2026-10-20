@@ -7,21 +7,36 @@
     - ../../vars/global.yml
 
   tasks:
+    - name: Check if cloudflared_net exists
+      community.docker.docker_network_info:
+        name: cloudflared_net
+      register: cloudflared_net_info
+
+    - name: Create cloudflared_net if missing
+      community.docker.docker_network:
+        name: cloudflared_net
+        driver: bridge
+        ipam_config:
+          - subnet: 172.18.0.0/16
+            gateway: 172.18.0.1
+        state: present
+      when: not cloudflared_net_info.exists
+
     - name: Add docker base folder.
       file:
         path: "{{ base_dir }}"
         state: directory
         mode: '0755'
-        owner: prouser 
-        group: prouser
+        owner: "{{ user_owner }}"
+        group: "{{ group_owner }}"
 
     - name: Add portainer data folder
       file:
         path: "{{ base_dir }}/portainer"
         state: directory
         mode: '0755'
-        owner: prouser 
-        group: prouser
+        owner: "{{ user_owner }}"
+        group: "{{ group_owner }}"
 
     - name: Start portainer Container
       community.docker.docker_container:
