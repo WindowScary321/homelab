@@ -21,7 +21,7 @@ Cấu trúc dự án:
     - [hosts.ini](./inventory/hosts.ini): chứa các host sẽ dc sử dụng bởi playbooks
 - playbooks
     - [docker_images](./playbooks/docker_images/): các docker quan trọng
-    - [maintains_manged_nodes](./playbooks/maintains_manged_nodes/): playbooks quản lý các **managed node**
+    - [maintains_manged_nodes](./playbooks/maintains_managed_nodes/): playbooks quản lý các **managed node**
 - vars
     - [global.yml](./vars/global.yml): biến toàn cục, ko quá nguy hiểm
     - [secrets.yml](./vars/secrets.yml): biến bí mật, chứa api key hay các thông tin cần dc bảo mật

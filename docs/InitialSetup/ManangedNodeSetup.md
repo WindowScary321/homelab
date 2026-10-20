@@ -46,7 +46,8 @@
         - Username: ``prouser``
         - Password: **Mở lại file secrets.yml**
 
-## 4. Cài đặt Cloudflare Tunnel
+## 4. Cài đặt Cloudflare Tunnel và thêm network ``cloudflared_net``
+- **Lưu ý:** Chạy playbook này để tạo network cần thiết
 - Thêm biến ``cloudflare_tunnel_token`` trong ``vars/secrets.yml``
 - Chạy
     ```
