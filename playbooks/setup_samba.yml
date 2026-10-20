@@ -44,7 +44,7 @@
       notify: Restart Samba
 
     - name: Check if Samba user already exists
-      shell: pdbedit -L {{ samba_user }}
+      shell: pdbedit -v -u {{ samba_user }}
       register: samba_user_check
       failed_when: false
       changed_when: false
