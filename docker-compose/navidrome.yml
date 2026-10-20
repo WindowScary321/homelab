@@ -15,8 +15,8 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - ND_PORT=4537
-      - ND_LASTFM_APIKEY=REDACTED # lộ api key rồi ...
-      - ND_LASTFM_SECRET=REDACTED # lộ api key rồi ...
+      - ND_LASTFM_APIKEY=${ND_LASTFM_APIKEY}
+      - ND_LASTFM_SECRET=${ND_LASTFM_SECRET}
       - ND_LOGLEVEL=info
       - ND_PLUGINS_ENABLED=true
       - ND_PLUGINS_FOLDER=/data/plugins

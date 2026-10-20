@@ -5,9 +5,10 @@
   
   vars_files:
     - ../vars/secrets.yml
+    - ../vars/global.yml
 
   vars:
-    samba_user: prouser
+    samba_user: "{{ homelab_user }}"
     share_path: /mnt/data
     share_name: Data
 
@@ -43,14 +44,16 @@
       notify: Restart Samba
 
     - name: Check if Samba user already exists
-      shell: pdbedit -L {{ samba_user }}
+      shell: pdbedit -v -u {{ samba_user }}
       register: samba_user_check
       failed_when: false
       changed_when: false
 
-    - name: Create Samba user and set password
-      shell: "(echo '{{ smb_password }}'; echo '{{ smb_password }}') | smbpasswd -s -a {{ samba_user }}"
-      when: samba_user_check.rc != 0 # nếu đã có user, bỏ qua bước này
+    - name: Create or update Samba user password
+      command: smbpasswd -s -a {{ samba_user }}
+      stdin: "{{ smb_password }}\n{{ smb_password }}"
+      no_log: true
+      changed_when: samba_user_check.rc != 0 # chỉ báo changed khi tạo user mới
 
   handlers:
     - name: Restart Samba 

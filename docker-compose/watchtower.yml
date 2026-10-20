@@ -1,4 +1,4 @@
- services:
+services:
   watchtower:
     image: nickfedor/watchtower:latest # containrrr (chủ dự án cũ) đã archive repo, đổi sang fork mới hơn
     container_name: watchtower
@@ -10,7 +10,7 @@
       - WATCHTOWER_CLEANUP=true # xoá image cũ sau khi update
       - WATCHTOWER_SCHEDULE=0 0 4 * * * # 4h sáng mỗi ngày (utc +7)
       - WATCHTOWER_ROLLING_RESTART=true # restart từng container thay vì tất cả cùng lúc
-      - WATCHTOWER_TIMEOUT=60 # chờ 1p sau khi container tắt
+      - WATCHTOWER_TIMEOUT=60s # chờ 1p sau khi container tắt
       - WATCHTOWER_LABEL_ENABLE=true # chỉ update các container có label 
       - WATCHTOWER_INCLUDE_RESTARTING=true # monitor cả container đang restart
     labels:
