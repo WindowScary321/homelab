@@ -79,3 +79,7 @@
 
 
 ## 5. `ansible-galaxy`
+Bổ sung lệnh cài dependency
+```
+ansible-galaxy collection install -r requirements.yml 
+```

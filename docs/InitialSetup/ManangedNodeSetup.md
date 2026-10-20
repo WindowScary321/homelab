@@ -1,7 +1,7 @@
 # Cài đặt môi trường dành cho Managed Node
 
 ## 0. Lưu ý
-- Các data của docker container sẽ đều dc lưu trữ tại ``/home/prouser/docker-data`` trên Managed Node
+- Các data của docker container sẽ đều dc lưu trữ tại ``/opt/docker-data/`` trên Managed Node
 - Tất cả command bên dưới sẽ setup Managed Node qua ansible, ko cần ssh trực tiếp 
 ## 1. Cài đặt Docker
 - Chạy:
@@ -46,8 +46,15 @@
         - Username: ``prouser``
         - Password: **Mở lại file secrets.yml**
 
-## 4. Cài đặt Portainer
-- Chạy:
+## 4. Cài đặt Cloudflare Tunnel
+- Thêm biến ``cloudflare_tunnel_token`` trong ``vars/secrets.yml``
+- Chạy
+    ```
+    ansible-playbook playbooks/docker_images/deploy_cf_tunnel.yml
+    ```
+
+## 5. Cài đặt Portainer
+- Chạy
     ```
     ansible-playbook playbooks/docker_images/deploy_portainer.yml
     ```
@@ -56,19 +63,19 @@
     http://homelab.netbird.cloud:9443/
     ```
 
-## 5. Cài đặt Caddy Reverse Proxy
+## 6. Cài đặt Caddy Reverse Proxy
 - Import [caddy.yml](../../docker-compose/caddy.yml) vào Portainer
 - Thêm các subdomain vào file compose và https://app.netbird.io/dns/zones
 
-## 6. Cài đặt Wireguard.
+## 8. Cài đặt Wireguard.
 - Import [wireguard.yml](../../docker-compose/wireguard.yml) vào Portainer
 - Lấy config kết nối vpn
     ```bash
     docker logs wireguard # quét mã qr  
     ```
-    - hoặc vào ``/home/prouser/docker-data/wireguard/peer_laptop_hoặc_phone`` trên Managed Node.
+    - hoặc vào ``/opt/docker-data//wireguard/peer_laptop_hoặc_phone`` trên Managed Node.
 
-## 7. Lưu ý
+## . Lưu ý
 - Tắt container (Giống ``docker stop``)
     ```
     ansible-playbook playbooks/docker_images/deploy_portainer.yml -e "container_state=stopped"

@@ -21,6 +21,7 @@
           - ufw
           - smartmontools 
           - git
+          - python3-requests
         state: present
 
     - name: 3. create keyrings folder

@@ -1,7 +1,7 @@
 # homelab stuffs
 
 ## 1. Giới thiệu.
-Đây là 1 số "attempt" self-host của t sử dụng _ansible_, _docker_ và _linux shell_ nhắm mục đích và học tập [IAC](https://viblo.asia/p/infrastructure-as-code-la-gi-tai-sao-lai-chon-terraform-LzD5dwrEljY). Các setup này hoàn toàn nhằm mục đích cá nhân nên sẽ có (nhiều) vấn đề trong quá trình vận hành.
+Đây là 1 số "attempt" self-host của t sử dụng _ansible_, _docker_ và _linux shell_ nhắm mục đích và học tập [IAC](https://viblo.asia/p/infrastructure-as-code-la-gi-tai-sao-lai-chon-terraform-LzD5dwrEljY). Các setup này hoàn toàn nhằm mục đích cá nhân nên sẽ có (nhiều) vấn đề trong quá trình vận hành
 
 ## 2. Setup môi trường.
 
@@ -28,7 +28,7 @@ Cấu trúc dự án:
 - [ansible.cfg](./ansible.cfg): config tổng của toàn bộ playbook
     
 ## 3. Mục tiêu tương lai
-- Tìm hiều thêm về IAC, viết blog ghi lại cập nhật của từng commit vào 1 folder riêng.
+- Tìm hiều thêm về IAC, viết blog ghi lại cập nhật của từng commit vào 1 folder riêng
 
 ## 4. Other
 - [Odoo 19 install script](https://github.com/SadHilarious/odoo19-install-script): Phiên bản Odoo "lậu" sử dụng để thực hành môn [ISM302](https://cmshn.fpt.edu.vn/course/index.php?categoryid=436)
